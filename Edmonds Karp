@@ -1,0 +1,137 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package FlujoMaximo;
+
+import java.util.*;
+
+public class MaxFlowEdmondsKarp {
+
+  static class Edge {
+    int s, t, rev, cap, f;
+
+    public Edge(int s, int t, int rev, int cap) {
+      this.s = s;
+      this.t = t;
+      this.rev = rev;
+      this.cap = cap;
+    }
+  }
+
+  public static List<Edge>[] createGraph(int nodes) {
+    List<Edge>[] graph = new List[nodes];
+    for (int i = 0; i < nodes; i++)
+      graph[i] = new ArrayList<>();
+    return graph;
+  }
+
+  public static void addEdge(List<Edge>[] graph, int s, int t, int cap) {
+    graph[s].add(new Edge(s, t, graph[t].size(), cap));
+    graph[t].add(new Edge(t, s, graph[s].size() - 1, 0));
+  }
+
+  public static int maxFlow(List<Edge>[] graph, int s, int t) {
+    int flow = 0;
+    int[] q = new int[graph.length];
+    while (true) {
+      int qt = 0;
+      q[qt++] = s;
+      Edge[] pred = new Edge[graph.length];
+      for (int qh = 0; qh < qt && pred[t] == null; qh++) {
+        int cur = q[qh];
+        for (Edge e : graph[cur]) {
+          if (pred[e.t] == null && e.cap > e.f) {
+            pred[e.t] = e;
+            q[qt++] = e.t;
+          }
+        }
+      }
+      if (pred[t] == null)
+        break;
+      int df = Integer.MAX_VALUE;
+      for (int u = t; u != s; u = pred[u].s)
+        df = Math.min(df, pred[u].cap - pred[u].f);
+      for (int u = t; u != s; u = pred[u].s) {
+        pred[u].f += df;
+        graph[pred[u].t].get(pred[u].rev).f -= df;
+      }
+      flow += df;
+    }
+    return flow;
+  }
+
+  // Usage example
+public static void main(String[] args) 
+  {
+    long inicio = System.nanoTime();
+    List<Edge>[] graph = createGraph(12);
+    
+       /* PRIMER CASO 0-5*/
+  /*addEdge(graph, 0, 1, 15);
+    addEdge(graph, 0, 2, 13);
+    addEdge(graph, 1, 2, 10);
+    addEdge(graph, 1, 3, 12);
+    addEdge(graph, 2, 1, 4);
+    addEdge(graph, 2, 4, 14);
+    addEdge(graph, 3, 2, 9);
+    addEdge(graph, 3, 5, 20);
+    addEdge(graph, 4, 3, 7);
+    addEdge(graph, 4, 5, 4);*/
+    
+    /* SEGUNDO CASO 0-8 */
+  /*addEdge(graph, 0, 1, 8);
+    addEdge(graph, 0, 2, 3);
+    addEdge(graph, 0, 9, 4);
+    addEdge(graph, 0, 10, 5);
+    addEdge(graph, 1, 3, 10);
+    
+    addEdge(graph, 2, 4, 12);
+    addEdge(graph, 3, 10, 6);
+    addEdge(graph, 4, 6, 14);
+    addEdge(graph, 5, 3, 7);
+    addEdge(graph, 5, 7, 5);
+   
+    addEdge(graph, 6, 9, 8);
+    addEdge(graph, 8, 6, 5);
+    addEdge(graph, 8, 7, 7);
+    addEdge(graph, 8, 10, 9);
+    addEdge(graph, 9, 8, 20);
+    
+    addEdge(graph, 10, 7, 8);
+    addEdge(graph, 10, 9, 16);*/
+    
+    
+    /* TERCER CASO 0-9*/
+    addEdge(graph, 0, 1, 5);
+    addEdge(graph, 0, 4, 15);
+    addEdge(graph, 0, 8, 10);
+    addEdge(graph, 1, 2, 10);
+    addEdge(graph, 2, 3, 10);
+    
+    addEdge(graph, 2, 9, 25);
+    addEdge(graph, 3, 7, 5);
+    addEdge(graph, 4, 5, 25);
+    addEdge(graph, 5, 6, 10);
+    addEdge(graph, 5, 10, 20);
+   
+    addEdge(graph, 6, 7, 10);
+    addEdge(graph, 8, 1, 15);
+    addEdge(graph, 8, 9, 20);
+    addEdge(graph, 9, 4, 5);
+    addEdge(graph, 9, 10, 30);
+    
+    addEdge(graph, 10, 2, 15);
+    addEdge(graph, 10, 6, 15);
+    addEdge(graph, 10, 7, 15);
+    
+    System.out.println(maxFlow(graph, 0, 9));
+    long fin = System.nanoTime();
+    
+    double dif = (double) (fin - inicio) * 0.000001 ;
+    
+    System.out.println("El rograma dura "+dif+" milisegundos");
+    
+  }
+}
