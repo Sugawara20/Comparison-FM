@@ -31,6 +31,26 @@ public class MaxFlowDinic {
     return graph;
   }
 
+  public static List<Edge>[] createGraph2(int nodes) {
+    int aristas = nodes * 4;
+    List<Edge>[] graph = new List[nodes];
+    for (int i = 0; i < nodes; i++){
+      graph[i] = new ArrayList<>();
+    }
+    for(int i=0; i<aristas ; i++){
+          Random first = new Random();
+          int f = first.nextInt(nodes);
+          
+          Random second = new Random();
+          int s = second.nextInt(nodes);
+          
+          Random claseRandom = new Random();
+          int peso = 1 + claseRandom.nextInt(21 - 1);
+          
+          addEdge(graph, f, s, peso);
+      }
+    return graph;
+  }
   
   public static void addEdge(List<Edge>[] graph, int s, int t, int cap) {
     graph[s].add(new Edge(t, graph[t].size(), cap));
@@ -91,6 +111,9 @@ public class MaxFlowDinic {
   // Usage example
   public static void main(String[] args) {
     long inicio = System.nanoTime();
+    
+    List<Edge>[] graph2 = createGraph2(500000);
+    
     List<Edge>[] graph = createGraph(11);
     
     /* PRIMER CASO 0-5*/
@@ -154,7 +177,7 @@ public class MaxFlowDinic {
 
   
     
-    System.out.println("El Flujo maximo es: "+maxFlow(graph, 0, 9));
+    System.out.println("El Flujo maximo es: "+maxFlow(graph2, 0, 99999));
     
     long fin = System.nanoTime();
     double de = (double) (fin-inicio);
